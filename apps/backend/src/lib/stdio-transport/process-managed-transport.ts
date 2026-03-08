@@ -186,9 +186,11 @@ export class ProcessManagedStdioTransport implements Transport {
       });
 
       this._process.on("close", (code, signal) => {
-        // Only emit crash event if this wasn't a clean shutdown
-        if (!this._isCleanup && (code !== 0 || signal)) {
-          logger.warn(`Process crashed with code: ${code}, signal: ${signal}`);
+        // Always fire crash handler unless this was an intentional cleanup.
+        // STDIO servers should NEVER exit voluntarily while MetaMCP is alive —
+        // even exit code 0 is a crash that needs recovery.
+        if (!this._isCleanup) {
+          logger.warn(`Process exited with code: ${code}, signal: ${signal}`);
           logger.info(
             `Calling onprocesscrash handler: ${this.onprocesscrash ? "handler exists" : "no handler"}`,
           );

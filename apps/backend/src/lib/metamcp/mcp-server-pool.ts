@@ -57,8 +57,8 @@ export class McpServerPool {
 
   private constructor(
     defaultIdleCount: number = 1,
-    maxTotalConnections: number = 100,
-    maxConnectionsPerServer: number = 5,
+    maxTotalConnections: number = Infinity,
+    maxConnectionsPerServer: number = Infinity,
   ) {
     this.defaultIdleCount = defaultIdleCount;
     this.maxTotalConnections = maxTotalConnections;
@@ -72,12 +72,12 @@ export class McpServerPool {
    */
   static getInstance(
     defaultIdleCount: number = 1,
-    maxConnectionsPerServer: number = 5,
+    maxConnectionsPerServer: number = Infinity,
   ): McpServerPool {
     if (!McpServerPool.instance) {
       McpServerPool.instance = new McpServerPool(
         defaultIdleCount,
-        100,
+        Infinity,
         maxConnectionsPerServer,
       );
     }
